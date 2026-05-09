@@ -22,3 +22,14 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# 환경 변수 파일
+**/.env
+**/.env.local
+**/.env.development.local
+**/.env.production.local
+
+# 설정 파일 (민감한 정보가 포함된 경우를 대비)
+*.yaml
+*.yml
+*.properties
