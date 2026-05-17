@@ -1,0 +1,6 @@
+.navBar {
+  height: 68px;
+  opacity: 100%;
+  background-color: #f5f0e8;
+  filter: drop-shadow();
+}

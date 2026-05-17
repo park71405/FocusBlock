@@ -1,0 +1,16 @@
+.navBarTitle {
+    right: 48px;
+    height: 21px;
+    right: calc(100% - 105px - 48px);
+    transform: rotate(0deg);
+    /*width: 105px;
+    height: 27px;*/
+    opacity: 100%;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    line-height: normal;
+    letter-spacing: 0;
+    text-align: left;
+    color: #C2CAB8;
+}
