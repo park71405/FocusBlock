@@ -1,6 +1,8 @@
 import { useState, type JSX } from "react";
 import { Badge } from "../component/ui/badge";
 import { ToggleGroup, ToggleGroupItem } from "../component/ui/toggle-group";
+import { cn } from "../lib/utils";
+import { interText } from "../lib/styles";
 
 
 const tabs = [
@@ -31,10 +33,10 @@ export const TaskFilterTabSection = (): JSX.Element => {
                             key={tab.value}
                             value={tab.value}
                             aria-label={tab.label}
-                            className={`flex h-8 items-center rounded-full px-3 transition-colors ${isActive ? "bg-white shadow=sm text-gray-900" : "bg-transparent text-gray-500 hover:text-gray-700"}`}
+                            className={`flex h-8 items-center rounded-full px-3 transition-colors ${isActive ? "bg-white shadow-sm text-gray-900" : "bg-transparent text-gray-500 hover:text-gray-700"}`}
                         >
                             <span className="flex items-center gap-1.75">
-                                <span className="mt-[-0.50px] font-['Inter',Helvetica] text-[13px] font-normal leading-[normal] tracking-normal">
+                                <span className={cn("mt-[-0.50px] text-[13px] font-normal", interText)}>
                                     {tab.label}
                                 </span>
                                 <Badge 

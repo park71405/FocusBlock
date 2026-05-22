@@ -1,4 +1,6 @@
-import { Button } from "../component/ui/button"
+import { Button } from "../component/ui/button";
+import { cn } from "../lib/utils";
+import { interText } from "../lib/styles";
 
 const navigationItems = [
   {label: "Dashboard", active: false},
@@ -10,7 +12,7 @@ export default function navBar({ title }: { title: string }) {
   return (
     <header className="w-full border-b border-black/5 bg-[#f5efe8] shadow-[0px_2px_10px_#00000012]">
       <div className="flex h-[68px] w-full items-center justify-between px-12">
-        <div className="[font-family: 'Inter',Helvetica] text-[22px] font-bold leading-[normal] tracking-[0] text-[#c2c9b8]">
+        <div className={cn(interText, "text-[22px] font-bold text-[#c2c9b8]")}>
           {title}
         </div>
         <nav aria-label="Primary" className="flex items-center">
@@ -23,10 +25,10 @@ export default function navBar({ title }: { title: string }) {
                 <Button 
                   type="button" 
                   variant="ghost" 
-                  className={`h-auto rounded-none px-0 py-0 [font-family:'Inter',Helvetica] text-sm font-normal leading-[normal] tracking-[0] hover:bg-transparent 
-                    ${item.active ? "text-[#8d9c84] hover:text-[#8d9c84]" : "text-[#797570] hover:text-[#797570]"}`} aria-current={item.active ? "page" : undefined}
+                  className={cn("h-auto rounded-none px-0 py-0 text-sm font-normal hover:bg-transparent", interText, item.active ? "text-[#8d9c84] hover:text-[#8d9c84]" : "text-[#797570] hover:text-[#797570]")}
+                  aria-current={item.active ? "page" : undefined}
                 >
-                  <span className="relative inline-flex item-center">
+                  <span className="relative inline-flex items-center">
                     {item.label}
                     {item.active ? (<span className="absolute left-1/2 top-[37px] h-0.5 w-12 -translate-x-1/2 rounded-[1px] bg-[#8d9c84]" />)  : null}
                   </span>
