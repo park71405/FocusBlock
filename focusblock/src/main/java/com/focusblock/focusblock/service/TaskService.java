@@ -18,7 +18,7 @@ public class TaskService {
     private final TaskRepository taskRepository;
 
     public List<TaskResponse> getTaskList(){
-        List<Task> taskList = taskRepository.findAllByOrderByDueDate();
+        List<Task> taskList = taskRepository.findActiveTaskList();
 
         return taskList.stream()
                 .map(TaskResponse::from)

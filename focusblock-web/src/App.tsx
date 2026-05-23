@@ -4,6 +4,9 @@ import { TaskHeaderSection } from './screen/TaskHeaderSection';
 import { TaskFilterTabSection } from './screen/TaskFilterTabSection';
 import { TaskListSection } from './screen/TaskListSection';
 import NavBar from './screen/navBar';
+import axios from "axios";
+
+axios.defaults.baseURL = "http://localhost:8080/";
 
 function App() {
  

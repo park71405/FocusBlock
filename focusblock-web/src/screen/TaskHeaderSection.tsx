@@ -3,6 +3,12 @@ import { Button } from "../component/ui/button";
 import { cn } from "../lib/utils";
 import { interText } from "../lib/styles";
 
+
+const clickAddTask = () => {
+    console.log("Add Task button clicked");
+
+}
+
 const tasks = {
     title: "My To-Do List",
     meta: "12 tasks . 7 remaining . 5 completed",
@@ -26,6 +32,7 @@ export const TaskHeaderSection = (): JSX.Element => {
                 variant="ghost" 
                 className="h-auto shrink-0 p-0 hover:bg-transparent" 
                 aria-label={tasks.actionLabel}
+                onClick={clickAddTask}
             >
                 {tasks.actionLabel}
             </Button>
