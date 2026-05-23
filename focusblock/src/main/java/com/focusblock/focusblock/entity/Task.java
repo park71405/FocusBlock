@@ -2,10 +2,12 @@ package com.focusblock.focusblock.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 
@@ -47,5 +49,13 @@ public class Task {
 
     @Column(name = "update_date")
     private LocalDate updateDate;
+
+    @Builder
+    public Task(String title, String description, String level, LocalDate dueDate){
+        this.title = title;
+        this.description = description;
+        this.level = level;
+        this.dueDate = dueDate;
+    }
 
 }
