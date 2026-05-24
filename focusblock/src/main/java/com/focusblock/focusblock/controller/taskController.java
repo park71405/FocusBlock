@@ -1,12 +1,13 @@
 package com.focusblock.focusblock.controller;
 
+import com.focusblock.focusblock.dto.TaskCreateRequest;
 import com.focusblock.focusblock.dto.TaskResponse;
 import com.focusblock.focusblock.service.TaskService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,5 +25,14 @@ public class taskController {
 
         return ResponseEntity.ok(taskResponseList);
     }
+
+    @PostMapping
+    public ResponseEntity<TaskResponse> createTask(@RequestBody @Valid TaskCreateRequest request) {
+        TaskResponse response = taskService.createTask(request);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    
 
 }

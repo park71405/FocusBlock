@@ -6,8 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
-import org.springframework.boot.context.properties.bind.DefaultValue;
-import org.springframework.cglib.core.Local;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 
@@ -15,6 +15,7 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "task")
+@EntityListeners(AuditingEntityListener.class)
 public class Task {
 
     @Id
@@ -30,7 +31,7 @@ public class Task {
 
     @Column(name = "complete_yn")
     @ColumnDefault("'N'")
-    private char completeYn;
+    private char completeYn = 'N';
 
     @Column(name = "level")
     private String level;
@@ -41,12 +42,14 @@ public class Task {
     @Column(name = "insert_id")
     private String insertId;
 
+    @CreatedDate
     @Column(name = "insert_date")
     private LocalDate insertDate;
 
     @Column(name = "update_id")
     private String updateId;
 
+    @CreatedDate
     @Column(name = "update_date")
     private LocalDate updateDate;
 

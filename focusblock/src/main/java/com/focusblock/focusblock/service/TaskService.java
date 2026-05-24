@@ -1,5 +1,6 @@
 package com.focusblock.focusblock.service;
 
+import com.focusblock.focusblock.dto.TaskCreateRequest;
 import com.focusblock.focusblock.dto.TaskResponse;
 import com.focusblock.focusblock.entity.Task;
 import com.focusblock.focusblock.repository.TaskRepository;
@@ -23,6 +24,15 @@ public class TaskService {
         return taskList.stream()
                 .map(TaskResponse::from)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public TaskResponse createTask(TaskCreateRequest request){
+        Task task = request.toEntity();
+
+        Task savedTask = taskRepository.save(task);
+
+        return TaskResponse.from(savedTask);
     }
 
 }
