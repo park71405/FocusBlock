@@ -1,39 +1,34 @@
 import { type JSX } from "react";
 import { Card, CardContent } from "../component/ui/card";
-import { Alert } from "@material-tailwind/react";
 import { Checkbox } from "../component/ui/checkbox";
 import { Badge } from "../component/ui/badge";
 import { Separator } from "../component/ui/separator";
 import { cn } from "../lib/utils";
 import { interText, taskSecondaryText, taskBadgeBase } from "../lib/styles";
-import { useTask } from "../hooks/useTask";
+import { type TaskResponse } from "../types/task";
 
-export const TaskListSection = (): JSX.Element => {
+interface TaskListSectionProps {
+    taskList: TaskResponse[];
+    isLoading: boolean;
+    error: string | null;
+}
 
-    const { taskList, isLoading, error } = useTask();
-
-    if(isLoading) {
-        return (
-            <button type="button" className="bg-indigo-500 ..." disabled>
-                <svg className="mr-3 size-5 animate-spin ..." viewBox="0 0 24 24"></svg>
-                Processing…
-            </button>
-        )
-    }
+export const TaskListSection = ({ taskList, isLoading, error }: TaskListSectionProps): JSX.Element => {
 
     if(error) {
         return (
-            <Alert icon={<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2}  stroke="currentColor" className="h-6 w-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"/>
-                </svg>}>
-                {error}
-            </Alert>
+            <div role="alert">
+                <div className="bg-red-500 text-white font-bold rounded-t px-4 py-2" />
+                 <div className="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">
+                    {error}
+                </div>
+            </div>
         )
     }
 
     return (
         <section aria-label="Task list" className="relative min-h-0 w-full flex-1">
-            <Card className="flex h-full w-full flex-col overflow-hidden rounded-2xl border-0 bg-[#ffffffd9] shadow-[0px_4px_16px_#33332d14]">
+            <Card className={`flex h-full w-full flex-col overflow-hidden rounded-2xl border-0 bg-[#ffffffd9] shadow-[0px_4px_16px_#33332d14] ${isLoading?"animate-pulse":""}`}>
                 <CardContent className="flex-1 overflow-y-auto p-0">
                     <div className="flex w-full flex-col">
                         <div>

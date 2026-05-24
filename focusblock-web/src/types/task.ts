@@ -15,3 +15,11 @@ export interface TaskResponse {
     date: string;
     priority: string;
 }
+
+export interface CreateTaskRequest {
+    title: string;
+    description: string;
+    tags: string;
+    dueDate: string;
+    level: string;
+}
