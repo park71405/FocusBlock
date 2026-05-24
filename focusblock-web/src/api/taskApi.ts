@@ -13,6 +13,11 @@ export const taskApi = {
         return response.status;
     },
 
+    updateTask: async (no: number, data: CreateTaskRequest): Promise<number> => {
+        const response = await axios.put(`/task/${no}`, data);
+        return response.status;
+    },
+
     updateCompleted: async (no: number, data: UpdateTaskCompleteRequest): Promise<number> => {
         const response = await axios.put(`/task/updateCompleted/${no}`, data);
         return response.status;

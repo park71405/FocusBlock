@@ -1,47 +1,65 @@
-import { useState, type JSX } from "react";
+import { useState, useEffect, type JSX } from "react";
 import { cn } from "../lib/utils";
 import { interText } from "../lib/styles";
 import { Button } from "./ui/button";
 import { FiX } from "react-icons/fi";
 import { taskApi } from "../api/taskApi";
+import type { TaskResponse } from "../types/task";
 
 interface AddTaskModalProps {
   isOpen: boolean;
   onClose: () => void;
   onAdded?: () => void;
+  updateTaskInfo?: TaskResponse | null;
 }
 
-type Priority = "High" | "Medium" | "Low";
+type Priority = "HIGH" | "MEDIUM" | "LOW";
 
 const PRIORITY_STYLES: Record<Priority, { base: string; active: string }> = {
-  High: {
+  HIGH: {
     base: "bg-[#fae8e4] text-[#c06060] hover:bg-[#f5dcd6]",
     active: "bg-[#c06060] text-white hover:bg-[#b05050]",
   },
-  Medium: {
+  MEDIUM: {
     base: "bg-[#f5eed8] text-[#8b7040] hover:bg-[#ede4c8]",
     active: "bg-[#8b8c5a] text-white hover:bg-[#7a7b4e]",
   },
-  Low: {
+  LOW: {
     base: "bg-[#ddecd8] text-[#4a8060] hover:bg-[#d0e2cc]",
     active: "bg-[#4a8060] text-white hover:bg-[#3a7050]",
   },
 };
 
-export const AddTaskModal = ({ isOpen, onClose, onAdded }: AddTaskModalProps): JSX.Element | null => {
+export const AddTaskModal = ({ isOpen, onClose, onAdded, updateTaskInfo }: AddTaskModalProps): JSX.Element | null => {
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [priority, setPriority] = useState<Priority>("Medium");
+  const [priority, setPriority] = useState<Priority>("MEDIUM");
   const [dueDate, setDueDate] = useState(new Date().toISOString().split("T")[0]);
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
+
+  useEffect(() => {
+    if (updateTaskInfo != null) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setTitle(updateTaskInfo.title);
+      setDescription(updateTaskInfo.description);
+      setPriority(updateTaskInfo.priority as Priority);
+      setDueDate(updateTaskInfo.date);
+    } else {
+      setTitle("");
+      setDescription("");
+      setPriority("MEDIUM");
+      setDueDate(new Date().toISOString().split("T")[0]);
+    }
+  }, [updateTaskInfo]);
 
   if (!isOpen) return null;
 
   const resetForm = () => {
     setTitle("");
     setDescription("");
-    setPriority("Medium");
+    setPriority("MEDIUM");
     setDueDate(new Date().toISOString().split("T")[0]);
     setTags([]);
     setTagInput("");
@@ -70,17 +88,28 @@ export const AddTaskModal = ({ isOpen, onClose, onAdded }: AddTaskModalProps): J
   const handleSubmit = async () => {
     if (!title.trim()) return;
     try {
-      const status = await taskApi.createTask({
+
+      let status: number;
+
+      const requestData = {
         title: title.trim(),
         description: description.trim(),
         tags: tags.join(","),
         dueDate,
         level: priority,
-      });
-      if (status === 201) {
+      }
+
+      if (updateTaskInfo != null){
+        status = await taskApi.updateTask(updateTaskInfo.no, requestData);
+      } else {
+        status = await taskApi.createTask(requestData); 
+      }
+
+      if (status === 201 || status === 200) {
         onAdded?.();
         handleClose();
       }
+      
     } catch (err) {
       console.error("태스크 생성 실패:", err);
     }
@@ -92,7 +121,7 @@ export const AddTaskModal = ({ isOpen, onClose, onAdded }: AddTaskModalProps): J
 
       <div className={cn("relative z-10 w-full max-w-125 mx-4 bg-white rounded-2xl shadow-2xl p-6", interText)}>
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-[#3c3a38]">Add New Task</h2>
+          <h2 className="text-xl font-semibold text-[#3c3a38]">Task</h2>
           <button
             type="button"
             onClick={handleClose}
@@ -143,7 +172,7 @@ export const AddTaskModal = ({ isOpen, onClose, onAdded }: AddTaskModalProps): J
           <div>
             <label className="block text-sm font-medium text-[#3c3a38] mb-1.5">Priority</label>
             <div className="flex gap-1.5">
-              {(["High", "Medium", "Low"] as Priority[]).map(p => (
+              {(["HIGH", "MEDIUM", "LOW"] as Priority[]).map(p => (
                 <button
                   key={p}
                   type="button"
@@ -207,7 +236,7 @@ export const AddTaskModal = ({ isOpen, onClose, onAdded }: AddTaskModalProps): J
             disabled={!title.trim()}
             className="flex-1 h-10 text-sm font-medium bg-[#7a8c6a] text-white hover:bg-[#6a7c5a] disabled:opacity-40"
           >
-            + Add Task
+            Save Task
           </Button>
         </div>
       </div>

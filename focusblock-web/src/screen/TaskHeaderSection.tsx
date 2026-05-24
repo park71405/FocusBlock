@@ -43,6 +43,7 @@ export const TaskHeaderSection = ({ onAdded }: TaskHeaderSectionProps): JSX.Elem
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onAdded={onAdded}
+                updateTaskInfo={null}
             />
         </>
     );
