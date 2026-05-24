@@ -1,10 +1,13 @@
 package com.focusblock.focusblock.controller;
 
+import com.focusblock.focusblock.dto.TaskCompletedUpdateReqeust;
 import com.focusblock.focusblock.dto.TaskCreateRequest;
 import com.focusblock.focusblock.dto.TaskResponse;
+import com.focusblock.focusblock.dto.TaskUpdateRequest;
 import com.focusblock.focusblock.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +36,19 @@ public class taskController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    
+    @PutMapping("/{no}")
+    public ResponseEntity<TaskResponse> updateTask(@PathVariable("no") int no, @RequestBody @Valid TaskUpdateRequest request){
+        TaskResponse response = taskService.updateTask(no, request);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/updateCompleted/{no}")
+    public ResponseEntity<TaskResponse> updateTaskCompleted(@PathVariable("no") int no, @RequestBody @Valid TaskCompletedUpdateReqeust request){
+        TaskResponse response = taskService.changeTaskCompleteYn(no, request);
+
+        return ResponseEntity.ok(response);
+    }
+
 
 }

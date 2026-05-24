@@ -1,7 +1,9 @@
 package com.focusblock.focusblock.service;
 
+import com.focusblock.focusblock.dto.TaskCompletedUpdateReqeust;
 import com.focusblock.focusblock.dto.TaskCreateRequest;
 import com.focusblock.focusblock.dto.TaskResponse;
+import com.focusblock.focusblock.dto.TaskUpdateRequest;
 import com.focusblock.focusblock.entity.Task;
 import com.focusblock.focusblock.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,26 @@ public class TaskService {
         Task savedTask = taskRepository.save(task);
 
         return TaskResponse.from(savedTask);
+    }
+
+    @Transactional
+    public TaskResponse updateTask(int no, TaskUpdateRequest request){
+        Task task = taskRepository.findById(no)
+                .orElseThrow(() -> new IllegalArgumentException(no + "인 task가 없습니다."));
+
+        task.update(request.getTitle(), request.getDescription(), request.getLevel(), request.getDueDate());
+
+        return TaskResponse.from(task);
+    }
+
+    @Transactional
+    public TaskResponse changeTaskCompleteYn(int no, TaskCompletedUpdateReqeust request){
+        Task task = taskRepository.findById(no)
+                .orElseThrow(() -> new IllegalArgumentException(no + "인 task가 없습니다."));
+
+        task.changeCompleteYn(request.getCompleteYn());
+
+        return TaskResponse.from(task);
     }
 
 }

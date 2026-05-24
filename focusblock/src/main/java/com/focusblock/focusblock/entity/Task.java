@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
@@ -49,7 +50,7 @@ public class Task {
     @Column(name = "update_id")
     private String updateId;
 
-    @CreatedDate
+    @LastModifiedDate
     @Column(name = "update_date")
     private LocalDate updateDate;
 
@@ -59,6 +60,17 @@ public class Task {
         this.description = description;
         this.level = level;
         this.dueDate = dueDate;
+    }
+
+    public void update(String title, String description, String level, LocalDate dueDate){
+        this.title = title;
+        this.description = description;
+        this.level = level;
+        this.dueDate = dueDate;
+    }
+
+    public void changeCompleteYn(char completeYn){
+        this.completeYn = completeYn == 'N' ? 'Y' : 'N';
     }
 
 }
