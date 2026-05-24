@@ -57,4 +57,12 @@ public class TaskService {
         return TaskResponse.from(task);
     }
 
+    @Transactional
+    public void deleteTask(int no){
+        Task task = taskRepository.findById(no)
+                .orElseThrow(() -> new IllegalArgumentException(no + "인 task가 없습니다."));
+
+        taskRepository.delete(task);
+    }
+
 }

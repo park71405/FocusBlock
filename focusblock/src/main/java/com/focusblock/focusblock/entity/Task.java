@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -17,6 +19,8 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "task")
 @EntityListeners(AuditingEntityListener.class)
+@SQLDelete(sql = "UPDATE task SET delete_yn = 'Y', update_date = NOW() where id = ?")
+@SQLRestriction("delete_yn = 'N'")
 public class Task {
 
     @Id
@@ -53,6 +57,9 @@ public class Task {
     @LastModifiedDate
     @Column(name = "update_date")
     private LocalDate updateDate;
+
+    @Column(name = "delete_yn", nullable = false, length = 1)
+    private char deleteYn = 'N';
 
     @Builder
     public Task(String title, String description, String level, LocalDate dueDate){
