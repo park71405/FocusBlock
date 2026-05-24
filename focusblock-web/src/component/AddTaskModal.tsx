@@ -90,7 +90,7 @@ export const AddTaskModal = ({ isOpen, onClose, onAdded }: AddTaskModalProps): J
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/15" onClick={handleClose} />
 
-      <div className={cn("relative z-10 w-full max-w-[500px] mx-4 bg-white rounded-2xl shadow-2xl p-6", interText)}>
+      <div className={cn("relative z-10 w-full max-w-125 mx-4 bg-white rounded-2xl shadow-2xl p-6", interText)}>
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-[#3c3a38]">Add New Task</h2>
           <button

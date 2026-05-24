@@ -19,7 +19,7 @@ function App() {
                     <CardContent className="flex min-h-0 flex-1 flex-col items-start gap-4 p-0">
                         <TaskHeaderSection onAdded={refreshTasks} />
                         <TaskFilterTabSection />
-                        <TaskListSection taskList={taskList} isLoading={isLoading} error={error} />
+                        <TaskListSection taskList={taskList} isLoading={isLoading} error={error} onUpdated={refreshTasks} />
                     </CardContent>
                 </Card>
             </section>

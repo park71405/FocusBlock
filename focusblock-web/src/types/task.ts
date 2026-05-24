@@ -1,4 +1,5 @@
 export interface TaskServerResponse {
+    no: number;
     completeYn: string;
     title: string;
     description: string;
@@ -8,6 +9,7 @@ export interface TaskServerResponse {
 }
 
 export interface TaskResponse {
+    no: number;
     completed: boolean;
     title: string;
     description: string;
@@ -22,4 +24,9 @@ export interface CreateTaskRequest {
     tags: string;
     dueDate: string;
     level: string;
+}
+
+export interface UpdateTaskCompleteRequest {
+    // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
+    completeYn: String;
 }

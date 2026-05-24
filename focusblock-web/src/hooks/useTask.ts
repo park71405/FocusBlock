@@ -13,6 +13,7 @@ export const useTask = () => {
             const taskList = await taskApi.getTasks();
             // 데이터 가공 
             const formattedTaskList: TaskResponse[] = taskList.map((task: TaskServerResponse) => ({
+                no: task.no,
                 completed: task.completeYn === 'N' ? false : true,
                 title: task.title,
                 description: task.description,

@@ -6,14 +6,29 @@ import { Separator } from "../component/ui/separator";
 import { cn } from "../lib/utils";
 import { interText, taskSecondaryText, taskBadgeBase } from "../lib/styles";
 import { type TaskResponse } from "../types/task";
+import { taskApi } from "../api/taskApi";
 
 interface TaskListSectionProps {
     taskList: TaskResponse[];
     isLoading: boolean;
     error: string | null;
+    onUpdated?: () => void;
 }
 
-export const TaskListSection = ({ taskList, isLoading, error }: TaskListSectionProps): JSX.Element => {
+export const TaskListSection = ({ taskList, isLoading, error, onUpdated }: TaskListSectionProps): JSX.Element => {
+
+    const updateCompleted = async (no: number, completed: boolean) => {
+        console.log("update completed", no , completed);
+        try {
+            const status = await taskApi.updateCompleted(no, {completeYn: completed ? "Y" : "N"});
+
+            if(status === 200) {
+                onUpdated?.();
+            }
+        } catch (err) {
+            console.error("태스크 생성 실패:", err);
+        }
+    };
 
     if(error) {
         return (
@@ -50,6 +65,7 @@ export const TaskListSection = ({ taskList, isLoading, error }: TaskListSectionP
                                             task.title ? `Mark ${task.title} as completed`
                                             : "Completed task"
                                         }
+                                        onClick={()=>updateCompleted(task.no, task.completed)}
                                         className={`mt-0 h-5.5 w-5.5 rounded-full border-2 shadow-none data-[state=checked]:border-[#c2c9b8] data-[state=checked]:bg-[#c2c9b8] data-[state=checked]:text-transparent ${task.completed ? "border-[#c2c9b8]" : "border-[#c2c6c9]"}`}
                                     />
                                     <div className="min-w-0 flex-1">
