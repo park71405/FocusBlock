@@ -61,3 +61,24 @@ export interface UpdateDailFocusRequest {
 export interface UpdateFocusOrderRequest {
     focusTasks: UpdateDailFocusRequest[];
 }
+
+export interface CreateTimeBoxTaskRequest {
+    taskNo: number;
+    blockDate: string;
+    startTime: string;
+    endTime: string;
+}
+
+export interface TimeBoxTaskResponse {
+    blockNo: number;
+    blockDate: string;
+    startTime: string;
+    endTime: string;
+    task: FocusTask
+}
+
+export interface UpdateTimeBoxTaskRequest {
+    blockNo: number;
+    startTime: string;
+    endTime: string;
+}
