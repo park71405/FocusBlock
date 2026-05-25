@@ -1,6 +1,6 @@
 import { useState, type JSX } from "react";
-import { AddTaskModal } from "../AddTaskModal";
-import { Button } from "./button";
+import { AddTaskModal } from "./AddTaskModal";
+import { Button } from "../../component/ui/button";
 import { TaskFilterList } from "./TaskFilterList";
 import { useTask } from "../../hooks/useTask";
 import type { TaskResponse } from "../../types/task";

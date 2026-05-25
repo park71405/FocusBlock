@@ -1,10 +1,10 @@
 import { useState, useEffect, type JSX } from "react";
-import { cn } from "../lib/utils";
-import { interText } from "../lib/styles";
-import { Button } from "./ui/button";
+import { cn } from "../../lib/utils";
+import { interText } from "../../lib/styles";
+import { Button } from "../../component/ui/button";
 import { FiX } from "react-icons/fi";
-import { taskApi } from "../api/taskApi";
-import type { TaskResponse } from "../types/task";
+import { taskApi } from "../../api/taskApi";
+import type { TaskResponse } from "../../types/task";
 
 interface AddTaskModalProps {
   isOpen: boolean;
