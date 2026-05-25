@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useAuth } from "../component/context/AuthProvider";
 import TaskHeader from "./Home/TaskHeader";
 import { TaskList } from "./Home/TaskList";
 import { DailyFocusList } from "./Home/DailyFocusList";
@@ -7,14 +6,16 @@ import { TimeBlock } from "./Home/TimeBlock";
 import { DndContext, PointerSensor, useSensor, useSensors, type DragEndEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { useFocusTask } from "../hooks/useFocusTask";
+import { useTimeBoxTask } from "../hooks/useTimeBoxTask";
 import { focusTaskApi } from "../api/focusTaskApi";
+import { timeBoxTaskApi } from "../api/timeBoxTaskApi";
 import type { TaskResponse } from "../types/task";
 
 function Home() {
 
-    const { logout } = useAuth();
     const [sysDate, setSysDate] = useState(new Date());
     const { focusTaskList, error: focusError, refreshFocusTasks } = useFocusTask({ sysDate });
+    const { timeBoxTaskList, error: timeBoxError, refreshTimeBoxTasks } = useTimeBoxTask({ sysDate });
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -57,12 +58,39 @@ function Home() {
             return;
         }
 
+        const task = active.data.current?.task as TaskResponse;
+        if (!task) return;
+
+        // TaskFilterList → TimeBlock 타임박싱 드롭
+        if (overId === "timeboxing-drop-zone") {
+            const now = new Date();
+            const roundedMin = now.getMinutes() < 30 ? 0 : 30;
+            const startTime = `${String(now.getHours()).padStart(2, "0")}:${String(roundedMin).padStart(2, "0")}`;
+            const toDate = new Date(now);
+            toDate.setMinutes(roundedMin + 60, 0, 0);
+            const endHour = toDate.getHours() > 23 ? 23 : toDate.getHours();
+            const endMin = toDate.getHours() > 23 ? 30 : toDate.getMinutes();
+            const endTime = `${String(endHour).padStart(2, "0")}:${String(endMin).padStart(2, "0")}`;
+
+            try {
+                const status = await timeBoxTaskApi.createTimeBoxTasks({
+                    taskNo: task.no,
+                    blockDate: sysDate.toISOString().split("T")[0],
+                    startTime,
+                    endTime,
+                });
+                if (status === 200 || status === 201) {
+                    refreshTimeBoxTasks();
+                }
+            } catch (err) {
+                console.error("타임박스 생성 실패:", err);
+            }
+            return;
+        }
+
         // TaskFilterList → DailyFocusList 크로스 드롭
         const isOverDropZone = overId === "important-drop-zone" || overId.startsWith("focus-");
         if (!isOverDropZone) return;
-
-        const task = active.data.current?.task as TaskResponse;
-        if (!task) return;
 
         const alreadyExists = focusTaskList.some(ft => ft.task.no === task.no);
         if (alreadyExists) return;
@@ -104,13 +132,16 @@ function Home() {
                                 error={focusError}
                                 refreshFocusTasks={refreshFocusTasks}
                             />
-                            <TimeBlock sysDate={sysDate} />
+                            <TimeBlock
+                                sysDate={sysDate}
+                                timeBoxTaskList={timeBoxTaskList}
+                                error={timeBoxError}
+                                refreshTimeBoxTasks={refreshTimeBoxTasks}
+                            />
                         </section>
                     </div>
                 </DndContext>
             </div>
-            <button onClick={logout}>로그아웃</button>
-            
         </main>
     )
 }

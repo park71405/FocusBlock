@@ -3,6 +3,7 @@ package com.focusblock.focusblock.entity;
 import com.focusblock.focusblock.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -11,6 +12,7 @@ import java.time.LocalTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "time_block")
+@EntityListeners(AuditingEntityListener.class)
 @ToString(exclude = "task")
 public class TimeBlock extends BaseEntity {
 
@@ -41,6 +43,11 @@ public class TimeBlock extends BaseEntity {
         this.startTime = startTime;
         this.endTime   = endTime;
         this.task      = task;
+    }
+
+    public void changeTime(LocalTime startTime, LocalTime endTime){
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     private void validate(LocalTime start, LocalTime end) {

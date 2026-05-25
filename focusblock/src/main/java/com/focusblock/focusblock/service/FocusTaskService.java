@@ -54,8 +54,6 @@ public class FocusTaskService {
                     .orElseThrow(() -> new IllegalArgumentException(focusNo + "인 focus task가 없습니다."));
 
             dailyFocus.changePriority(priorityOrder);
-
-            System.out.println("FocusNo: " + focusNo + ", New Order: " + priorityOrder);
         }
     }
 
