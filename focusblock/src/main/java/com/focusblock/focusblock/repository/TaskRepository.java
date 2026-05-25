@@ -19,7 +19,7 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     @Query("SELECT t " +
             "FROM Task t " +
             "WHERE (t.completeYn = 'N' OR t.dueDate >= :sysDate ) " +
-            "   AND insertId = :userId    " +
+            "   AND insertId = :userId AND t.deleteYn = 'N' " +
             "ORDER BY t.dueDate ASC ")
     List<Task> findActiveTaskList(LocalDate sysDate, String userId);
 
