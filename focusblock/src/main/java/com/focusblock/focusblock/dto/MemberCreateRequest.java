@@ -31,7 +31,7 @@ public class MemberCreateRequest {
     public Member toEntity(String encodePassword){
         return Member.builder()
                 .loginId(this.loginId)
-                .password(this.password)
+                .password(encodePassword)
                 .nickname(this.nickname)
                 .email(this.email)
                 .build();

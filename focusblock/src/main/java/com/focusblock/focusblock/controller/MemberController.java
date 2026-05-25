@@ -24,14 +24,14 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping()
+    @PostMapping("/join")
     public ResponseEntity<MemberResponse> createMember(@RequestBody @Valid MemberCreateRequest request) {
         MemberResponse response = memberService.createMember(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody @Valid LoginRequest request, HttpServletResponse response){
+    public ResponseEntity<TokenResponse> login(@RequestBody @Valid LoginRequest request, HttpServletResponse response){
         TokenResponse tokenDto = memberService.login(request);
 
         ResponseCookie cookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
@@ -44,7 +44,7 @@ public class MemberController {
 
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
-        return ResponseEntity.ok(tokenDto.getAccessToken());
+        return ResponseEntity.ok(tokenDto);
     }
 
 }

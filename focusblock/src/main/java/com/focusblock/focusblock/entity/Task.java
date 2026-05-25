@@ -1,5 +1,6 @@
 package com.focusblock.focusblock.entity;
 
+import com.focusblock.focusblock.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -19,9 +20,9 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "task")
 @EntityListeners(AuditingEntityListener.class)
-@SQLDelete(sql = "UPDATE task SET delete_yn = 'Y', update_date = NOW() where id = ?")
+@SQLDelete(sql = "UPDATE task SET delete_yn = 'Y', update_date = NOW() where task_no = ?")
 @SQLRestriction("delete_yn = 'N'")
-public class Task {
+public class Task extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,20 +44,6 @@ public class Task {
 
     @Column(name = "due_date")
     private LocalDate dueDate;
-
-    @Column(name = "insert_id")
-    private String insertId;
-
-    @CreatedDate
-    @Column(name = "insert_date")
-    private LocalDate insertDate;
-
-    @Column(name = "update_id")
-    private String updateId;
-
-    @LastModifiedDate
-    @Column(name = "update_date")
-    private LocalDate updateDate;
 
     @Column(name = "delete_yn", nullable = false, length = 1)
     private char deleteYn = 'N';
