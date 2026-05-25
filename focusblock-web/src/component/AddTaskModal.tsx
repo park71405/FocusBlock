@@ -30,12 +30,12 @@ const PRIORITY_STYLES: Record<Priority, { base: string; active: string }> = {
   },
 };
 
-export const AddTaskModal = ({ isOpen, onClose, onAdded, updateTaskInfo }: AddTaskModalProps): JSX.Element | null => {
+export const AddTaskModal = ({ isOpen, onClose, onAdded, updateTaskInfo, sysDate }: AddTaskModalProps & { sysDate: Date }): JSX.Element | null => {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState<Priority>("MEDIUM");
-  const [dueDate, setDueDate] = useState(new Date().toISOString().split("T")[0]);
+  const [dueDate, setDueDate] = useState(sysDate.toISOString().split("T")[0]);
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
 
@@ -50,9 +50,9 @@ export const AddTaskModal = ({ isOpen, onClose, onAdded, updateTaskInfo }: AddTa
       setTitle("");
       setDescription("");
       setPriority("MEDIUM");
-      setDueDate(new Date().toISOString().split("T")[0]);
+      setDueDate(sysDate.toISOString().split("T")[0]);
     }
-  }, [updateTaskInfo]);
+  }, [updateTaskInfo, sysDate]);
 
   if (!isOpen) return null;
 
@@ -60,7 +60,7 @@ export const AddTaskModal = ({ isOpen, onClose, onAdded, updateTaskInfo }: AddTa
     setTitle("");
     setDescription("");
     setPriority("MEDIUM");
-    setDueDate(new Date().toISOString().split("T")[0]);
+    setDueDate(sysDate.toISOString().split("T")[0]);
     setTags([]);
     setTagInput("");
   };

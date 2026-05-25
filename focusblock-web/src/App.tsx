@@ -1,30 +1,35 @@
-import { Card, CardContent } from './component/ui/card';
-import { TaskHeaderSection } from './screen/TaskHeaderSection';
-import { TaskFilterTabSection } from './screen/TaskFilterTabSection';
-import { TaskListSection } from './screen/TaskListSection';
-import NavBar from './screen/navBar';
-import axios from "axios";
-import { useTask } from "./hooks/useTask";
+// src/App.tsx
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './component/context/AuthProvider';
+import ProtectedRoute from './component/context/ProtectedRoute';
+import Home from './screen/Home';
+import Login from './screen/Login';
+import Join from './screen/Join';
+import NotFoundPage from './screen/NotFoundPage';
 
-axios.defaults.baseURL = "http://localhost:8080/";
+const App: React.FC = () => {
+  return (
+    // 1. 최상위에서 인증 컨텍스트를 먼저 제공합니다.
+    <AuthProvider> 
+      <BrowserRouter>
+        <Routes>
+          
+          {/* 2. 이제 이 하위의 ProtectedRoute들은 안전하게 useAuth를 호출할 수 있습니다. */}
+          <Route element={<ProtectedRoute authenticationRequired={true} />}>
+            <Route path="/" element={<Home />} />
+          </Route>
 
-function App() {
-    const { taskList, isLoading, error, refreshTasks } = useTask();
+          <Route element={<ProtectedRoute authenticationRequired={false} />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Join />} />
+          </Route>
 
-    return (
-        <main className="flex h-screen w-full flex-col bg-[#f3f1ee]" data-model-id="12:2">
-            <NavBar title="FocusBlock-ToDo" />
-            <section className="mx-auto flex min-h-0 w-full max-w-360 flex-1 justify-center overflow-hidden px-4 pb-10 pt-6 sm:px-6 lg:px-8">
-                <Card className="flex min-h-0 w-full max-w-220 flex-col border-0 bg-transparent shadow-none">
-                    <CardContent className="flex min-h-0 flex-1 flex-col items-start gap-4 p-0">
-                        <TaskHeaderSection onAdded={refreshTasks} />
-                        <TaskFilterTabSection />
-                        <TaskListSection taskList={taskList} isLoading={isLoading} error={error} onUpdated={refreshTasks} />
-                    </CardContent>
-                </Card>
-            </section>
-        </main>
-    );
-}
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+  );
+};
 
-export default App
+export default App;
