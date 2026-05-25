@@ -20,15 +20,15 @@ interface TaskFilterListProps {
     taskList: TaskResponse[];
     isLoading: boolean;
     error: string | null;
+    setIsModalOpen: (isOpen: boolean) => void;
+    setUpdateTaskInfo: (taskInfo: TaskResponse | null) => void;
     onUpdated?: () => void;
 }
 
-export const TaskFilterList = ({ taskList, isLoading, error, onUpdated }: TaskFilterListProps): JSX.Element => {
+export const TaskFilterList = ({ taskList, isLoading, error, setIsModalOpen, setUpdateTaskInfo, onUpdated }: TaskFilterListProps): JSX.Element => {
 
     const [selectedTab, setSelectedTab] = useState("all");
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [updateTaskInfo, setUpdateTaskInfo] = useState<TaskResponse | null>(null);
-
+    
     const updateCompleted = async (no: number, completed: boolean) => {
         console.log("update completed", no , completed);
         try {
@@ -45,6 +45,17 @@ export const TaskFilterList = ({ taskList, isLoading, error, onUpdated }: TaskFi
     const updateTask = (task: TaskResponse) => {
         setIsModalOpen(true);
         setUpdateTaskInfo(task);
+    }
+
+    if(error) {
+        return (
+            <div role="alert">
+                <div className="bg-red-500 text-white font-bold rounded-t px-4 py-2" />
+                 <div className="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">
+                    {error}
+                </div>
+            </div>
+        )
     }
 
     return (

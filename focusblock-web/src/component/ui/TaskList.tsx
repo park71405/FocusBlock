@@ -3,11 +3,13 @@ import { AddTaskModal } from "../AddTaskModal";
 import { Button } from "./button";
 import { TaskFilterList } from "./TaskFilterList";
 import { useTask } from "../../hooks/useTask";
+import type { TaskResponse } from "../../types/task";
 
 export const TaskList = ({ sysDate }: { sysDate: Date }): JSX.Element => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const { taskList, isLoading, error, refreshTasks } = useTask();
+    const [updateTaskInfo, setUpdateTaskInfo] = useState<TaskResponse | null>(null);
+    const { taskList, isLoading, error, refreshTasks } = useTask({sysDate});
 
     return (
         <>
@@ -23,19 +25,26 @@ export const TaskList = ({ sysDate }: { sysDate: Date }): JSX.Element => {
                 <Button 
                     variant="ghost" 
                     className="px-4 py-2 rounded-md border bg-[#c2c9b8] border-[#c2c9b8] text-white text-sm font-medium hover:bg-[#6a7c5a] transition"
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => {setIsModalOpen(true); setUpdateTaskInfo(null);}}
                 >
                     + 할일 추가
                 </Button>
             </header>
             <div className="p-5">
-                <TaskFilterList taskList={taskList} isLoading={isLoading} error={error} onUpdated={refreshTasks} />
+                <TaskFilterList 
+                    taskList={taskList} 
+                    isLoading={isLoading} 
+                    error={error}
+                    setIsModalOpen={setIsModalOpen}
+                    setUpdateTaskInfo={setUpdateTaskInfo}
+                    onUpdated={refreshTasks}
+                />
             </div>
             <AddTaskModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onAdded={refreshTasks}
-                updateTaskInfo={null}
+                updateTaskInfo={updateTaskInfo}
                 sysDate={sysDate}
             />
         </>

@@ -88,7 +88,6 @@ export const AddTaskModal = ({ isOpen, onClose, onAdded, updateTaskInfo, sysDate
   const handleSubmit = async () => {
     if (!title.trim()) return;
     try {
-
       let status: number;
 
       const requestData = {
@@ -114,6 +113,26 @@ export const AddTaskModal = ({ isOpen, onClose, onAdded, updateTaskInfo, sysDate
       console.error("태스크 생성 실패:", err);
     }
   };
+
+  const handleDelete = async () => {
+  
+    if (!updateTaskInfo) return;
+
+    try {
+      
+      const status = await taskApi.deleteTask(updateTaskInfo.no);
+
+      if (status === 204) {
+        onAdded?.();
+        handleClose();
+      }
+
+    } catch (err) {
+      console.error("태스크 삭제 실패:", err);
+    }
+
+    
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -225,10 +244,10 @@ export const AddTaskModal = ({ isOpen, onClose, onAdded, updateTaskInfo, sysDate
           <Button
             type="button"
             variant="outline"
-            onClick={handleClose}
+            onClick={handleDelete}
             className="flex-1 h-10 text-sm font-medium text-[#797570] border-[#e8e5e1] bg-white hover:bg-[#f3f1ee] hover:text-[#3c3a38]"
           >
-            Cancel
+            {(!updateTaskInfo) ? "Cancel" : "Delete Task"}
           </Button>
           <Button
             type="button"

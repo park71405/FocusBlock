@@ -1,16 +1,17 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect, useCallback} from "react";
 import { type TaskResponse, type TaskServerResponse } from "../types/task";
 import { taskApi } from "../api/taskApi";
 
-export const useTask = () => {
+export const useTask = ({ sysDate }: { sysDate: Date }) => {
 
     const [taskList, setTaskList] = useState<TaskResponse[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchTasks = async () => {
+    const fetchTasks = useCallback(async () => {
+        setIsLoading(true);
         try {
-            const taskList = await taskApi.getTasks();
+            const taskList = await taskApi.getTasks(sysDate);
             // 데이터 가공 
             const formattedTaskList: TaskResponse[] = taskList.map((task: TaskServerResponse) => ({
                 no: task.no,
@@ -31,13 +32,13 @@ export const useTask = () => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [sysDate]);
 
     // 컴포넌트 마운트 시 자동 호출
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchTasks();
-    }, []);
+    }, [fetchTasks]);
 
     // 외부(컴포넌트)에서 사용할 상태와 함수를 반환
     return { taskList, isLoading, error, refreshTasks: fetchTasks };

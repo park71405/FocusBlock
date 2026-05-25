@@ -1,5 +1,6 @@
 package com.focusblock.focusblock.service;
 
+import com.focusblock.focusblock.common.SecurityUtil;
 import com.focusblock.focusblock.dto.TaskCompletedUpdateReqeust;
 import com.focusblock.focusblock.dto.TaskCreateRequest;
 import com.focusblock.focusblock.dto.TaskResponse;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,8 +23,11 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
 
-    public List<TaskResponse> getTaskList(){
-        List<Task> taskList = taskRepository.findActiveTaskList();
+    public List<TaskResponse> getTaskList(LocalDate sysDate){
+
+        String currentUserId = SecurityUtil.getCurrentLoginId();
+
+        List<Task> taskList = taskRepository.findActiveTaskList(sysDate, currentUserId);
 
         return taskList.stream()
                 .map(TaskResponse::from)
