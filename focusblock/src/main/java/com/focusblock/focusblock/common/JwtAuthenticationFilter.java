@@ -1,10 +1,15 @@
 package com.focusblock.focusblock.common;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
@@ -21,19 +26,38 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        // 1. Request 헤더에서 JWT 토큰 추출
-        String token = resolveToken(request);
+        try {
 
-        // 2. 토큰 유효성 검증 (앞서 JwtTokenProvider에 만든 validateToken 호출)
-        if (token != null && jwtTokenProvider.validate(token)) {
-            // 토큰이 유효하면 토큰으로부터 인증 객체(Authentication)를 가져옴
-            Authentication authentication = jwtTokenProvider.getAuthentication(token);
-            // 🔥 중요: Spring Security 저장소(Context)에 인증 객체 저장 -> 403 프리패스 통행증 발행
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            // 1. Request 헤더에서 JWT 토큰 추출
+            String token = resolveToken(request);
+
+            // 2. 토큰 유효성 검증 (앞서 JwtTokenProvider에 만든 validateToken 호출)
+            if (token != null && jwtTokenProvider.validate(token)) {
+                // 토큰이 유효하면 토큰으로부터 인증 객체(Authentication)를 가져옴
+                Authentication authentication = jwtTokenProvider.getAuthentication(token);
+                // 🔥 중요: Spring Security 저장소(Context)에 인증 객체 저장 -> 403 프리패스 통행증 발행
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+
+            // 3. 다음 보안 필터로 요청 넘기기
+            filterChain.doFilter(request, response);
+
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            setResponse(response, HttpStatus.UNAUTHORIZED, "잘못된 JWT 서명입니다.");
+        } catch (ExpiredJwtException e) {
+            setResponse(response, HttpStatus.UNAUTHORIZED, "만료된 JWT 토큰입니다.");
+        } catch (UnsupportedJwtException e) {
+            setResponse(response, HttpStatus.UNAUTHORIZED, "지원되지 않는 JWT 토큰입니다.");
+        } catch (IllegalArgumentException e) {
+            setResponse(response, HttpStatus.UNAUTHORIZED, "JWT 토큰이 잘못되었습니다.");
         }
 
-        // 3. 다음 보안 필터로 요청 넘기기
-        filterChain.doFilter(request, response);
+    }
+
+    private void setResponse(HttpServletResponse response, HttpStatus status, String message) throws IOException {
+        response.setStatus(status.value());
+        response.setContentType("application/json; charset=UTF-8");
+        response.getWriter().write("{\"status\": " + status.value() + ", \"message\": \"" + message + "\"}");
     }
 
     /**
