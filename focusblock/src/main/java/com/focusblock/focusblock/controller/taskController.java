@@ -7,13 +7,11 @@ import com.focusblock.focusblock.dto.TaskUpdateRequest;
 import com.focusblock.focusblock.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -23,10 +21,18 @@ public class taskController {
 
     private final TaskService taskService;
 
-    @GetMapping
+    /*@GetMapping
     public ResponseEntity<List<TaskResponse>> getTaskList(@RequestParam(value = "sysDate") LocalDate sysdate){
 
         List<TaskResponse> taskResponseList = taskService.getTaskList(sysdate);
+
+        return ResponseEntity.ok(taskResponseList);
+    }*/
+
+    @GetMapping
+    public ResponseEntity<List<TaskResponse>> getFilteredTaskList(@RequestParam(value ="sysDate") LocalDate sysdate, @RequestParam(value="filter", defaultValue = "all") String filter){
+
+        List<TaskResponse> taskResponseList = taskService.getTaskList(sysdate, filter);
 
         return ResponseEntity.ok(taskResponseList);
     }

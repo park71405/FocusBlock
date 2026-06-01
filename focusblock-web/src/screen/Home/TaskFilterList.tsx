@@ -10,8 +10,8 @@ import { DraggableTaskItem } from "./DraggableTaskItem";
 
 const tabs = [
     { label: "All", count: "12", value: "all"},
-    { label: "UnFinished", count: "5", value: "today"},
-    { label: "Complete", count: "3", value: "complete"},
+    { label: "UnFinished", count: "5", value: "UnFinished"},
+    { label: "Complete", count: "3", value: "Complete"},
 ];
 
 interface TaskFilterListProps {
@@ -46,6 +46,10 @@ export const TaskFilterList = ({ taskList, isLoading, error, setIsModalOpen, set
         setUpdateTaskInfo(task);
     }
 
+    const fillteredTaskList = (value: string) => {
+        console.log("fillteredTaskList", value);
+    }
+
     if(error) {
         return (
             <div role="alert">
@@ -66,6 +70,7 @@ export const TaskFilterList = ({ taskList, isLoading, error, setIsModalOpen, set
                         value={selectedTab}
                         onValueChange={(value) => {
                             if(value) setSelectedTab(value);
+                            fillteredTaskList(value);
                         }}
                         className="flex w-full flex-wrap items-center justify-start gap-1.5"
                     >

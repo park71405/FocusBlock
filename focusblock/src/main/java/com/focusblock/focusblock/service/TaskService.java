@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +29,21 @@ public class TaskService {
         String currentUserId = SecurityUtil.getCurrentLoginId();
 
         List<Task> taskList = taskRepository.findActiveTaskList(sysDate, currentUserId);
+
+        return taskList.stream()
+                .map(TaskResponse::from)
+                .collect(Collectors.toList());
+    }
+
+    public List<TaskResponse> getTaskList(LocalDate sysDate, String filter){
+        String currentUserId = SecurityUtil.getCurrentLoginId();
+
+        List<Task> taskList = switch (filter) {
+            case "all" -> taskRepository.findActiveTaskList(sysDate, currentUserId);
+            case "UnFinished" -> taskRepository.findUnFinishedTaskList(sysDate, currentUserId);
+            case "Complete" -> taskRepository.findCompleteTaskList(sysDate, currentUserId);
+            default -> throw new IllegalArgumentException("잘못된 필터값 입니다.");
+        };
 
         return taskList.stream()
                 .map(TaskResponse::from)
