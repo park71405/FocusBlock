@@ -23,4 +23,18 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
             "ORDER BY t.dueDate ASC ")
     List<Task> findActiveTaskList(LocalDate sysDate, String userId);
 
+    @Query("SELECT t " +
+            "FROM Task t " +
+            "WHERE t.completeYn = 'N' AND t.dueDate >= :sysDate " +
+            "   AND insertId = :userId AND t.deleteYn = 'N' " +
+            "ORDER BY t.dueDate ASC ")
+    List<Task> findUnFinishedTaskList(LocalDate sysDate, String userId);
+
+    @Query("SELECT t " +
+            "FROM Task t " +
+            "WHERE t.completeYn = 'Y' AND t.dueDate >= :sysDate " +
+            "   AND insertId = :userId AND t.deleteYn = 'N' " +
+            "ORDER BY t.dueDate ASC ")
+    List<Task> findCompleteTaskList(LocalDate sysDate, String userId);
+
 }

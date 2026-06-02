@@ -3,8 +3,8 @@ import axiosInstance from './axiosInstance';
 
 export const taskApi = {
     // 현재 날짜 기준 남은 task 와 오늘까지인 task 를 모두 가져오는 API
-    getTasks: async (sysDate: Date): Promise<TaskServerResponse[]> => {
-        const response = await axiosInstance.get("/task", { params: { sysDate: sysDate.toISOString().split("T")[0] } });
+    getTasks: async (sysDate: Date, filter: string): Promise<TaskServerResponse[]> => {
+        const response = await axiosInstance.get("/task", { params: { sysDate: sysDate.toISOString().split("T")[0], filter: filter} });
         return response.data;
     },
 

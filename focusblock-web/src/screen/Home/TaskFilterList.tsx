@@ -2,7 +2,7 @@ import { ToggleGroup } from "@radix-ui/react-toggle-group";
 import { interText } from "../../lib/styles";
 import { cn } from "../../lib/utils";
 import { ToggleGroupItem } from "../../component/ui/toggle-group";
-import { useState, type JSX } from "react";
+import { type JSX } from "react";
 import { Card, CardContent } from "../../component/ui/card";
 import type { TaskResponse } from "../../types/task";
 import { taskApi } from "../../api/taskApi";
@@ -10,8 +10,8 @@ import { DraggableTaskItem } from "./DraggableTaskItem";
 
 const tabs = [
     { label: "All", count: "12", value: "all"},
-    { label: "UnFinished", count: "5", value: "today"},
-    { label: "Complete", count: "3", value: "complete"},
+    { label: "UnFinished", count: "5", value: "UnFinished"},
+    { label: "Complete", count: "3", value: "Complete"},
 ];
 
 interface TaskFilterListProps {
@@ -21,12 +21,11 @@ interface TaskFilterListProps {
     setIsModalOpen: (isOpen: boolean) => void;
     setUpdateTaskInfo: (taskInfo: TaskResponse | null) => void;
     onUpdated?: () => void;
+    filter: string;
+    changeFilter: (filter: string) => void;
 }
 
-export const TaskFilterList = ({ taskList, isLoading, error, setIsModalOpen, setUpdateTaskInfo, onUpdated }: TaskFilterListProps): JSX.Element => {
-
-
-    const [selectedTab, setSelectedTab] = useState("all");
+export const TaskFilterList = ({ taskList, isLoading, error, setIsModalOpen, setUpdateTaskInfo, onUpdated, filter, changeFilter }: TaskFilterListProps): JSX.Element => {
     
     const updateCompleted = async (no: number, completed: boolean) => {
         console.log("update completed", no , completed);
@@ -63,14 +62,14 @@ export const TaskFilterList = ({ taskList, isLoading, error, setIsModalOpen, set
                 <section className="w-full">
                     <ToggleGroup
                         type="single"
-                        value={selectedTab}
+                        value={filter}
                         onValueChange={(value) => {
-                            if(value) setSelectedTab(value);
+                            if(value) changeFilter(value);
                         }}
                         className="flex w-full flex-wrap items-center justify-start gap-1.5"
                     >
                         {tabs.map((tab) => {
-                            const isActive = selectedTab === tab.value;
+                            const isActive = filter === tab.value;
 
                             return (
                                 <ToggleGroupItem
