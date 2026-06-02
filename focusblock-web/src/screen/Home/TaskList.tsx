@@ -5,11 +5,11 @@ import { TaskFilterList } from "./TaskFilterList";
 import { useTask } from "../../hooks/useTask";
 import type { TaskResponse } from "../../types/task";
 
-export const TaskList = ({ sysDate }: { sysDate: Date }): JSX.Element => {
+export const TaskList = ({ sysDate, filter, changeFilter }: { sysDate: Date; filter: string; changeFilter: (filter: string) => void }): JSX.Element => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [updateTaskInfo, setUpdateTaskInfo] = useState<TaskResponse | null>(null);
-    const { taskList, isLoading, error, refreshTasks } = useTask({sysDate});
+    const { taskList, isLoading, error, refreshTasks } = useTask({sysDate, filter});
 
     return (
         <>
@@ -38,6 +38,8 @@ export const TaskList = ({ sysDate }: { sysDate: Date }): JSX.Element => {
                     setIsModalOpen={setIsModalOpen}
                     setUpdateTaskInfo={setUpdateTaskInfo}
                     onUpdated={refreshTasks}
+                    filter={filter}
+                    changeFilter={changeFilter}
                 />
             </div>
             <AddTaskModal

@@ -2,7 +2,7 @@ import {useState, useEffect, useCallback} from "react";
 import { type TaskResponse, type TaskServerResponse } from "../types/task";
 import { taskApi } from "../api/taskApi";
 
-export const useTask = ({ sysDate }: { sysDate: Date }) => {
+export const useTask = ({ sysDate, filter }: { sysDate: Date; filter: string }) => {
 
     const [taskList, setTaskList] = useState<TaskResponse[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -11,7 +11,7 @@ export const useTask = ({ sysDate }: { sysDate: Date }) => {
     const fetchTasks = useCallback(async () => {
         setIsLoading(true);
         try {
-            const taskList = await taskApi.getTasks(sysDate);
+            const taskList = await taskApi.getTasks(sysDate, filter);
             // 데이터 가공 
             const formattedTaskList: TaskResponse[] = taskList.map((task: TaskServerResponse) => ({
                 no: task.no,
@@ -32,7 +32,7 @@ export const useTask = ({ sysDate }: { sysDate: Date }) => {
         } finally {
             setIsLoading(false);
         }
-    }, [sysDate]);
+    }, [sysDate, filter]);
 
     // 컴포넌트 마운트 시 자동 호출
     useEffect(() => {

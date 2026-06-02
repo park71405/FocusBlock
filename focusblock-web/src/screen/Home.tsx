@@ -14,6 +14,7 @@ import type { TaskResponse } from "../types/task";
 function Home() {
 
     const [sysDate, setSysDate] = useState(new Date());
+    const [filter, setFilter] = useState('all');
     const { focusTaskList, error: focusError, refreshFocusTasks } = useFocusTask({ sysDate });
     const { timeBoxTaskList, error: timeBoxError, refreshTimeBoxTasks } = useTimeBoxTask({ sysDate });
 
@@ -122,7 +123,7 @@ function Home() {
                     <div className="grid grid-cols-10 gap-5 h-full">
                         <section className="col-span-5 bg-[#FEFDFD] rounded-2xl border border-gray-200">
                             {/* 여기에 할 일 목록이 들어갈 예정*/}
-                            <TaskList sysDate={sysDate} />
+                            <TaskList sysDate={sysDate} filter={filter} changeFilter={setFilter} />
                         </section>
                         <section className="col-span-5 flex flex-col gap-5">
                             {/* 여기에 할일 3가지랑, 타임박싱 */}
